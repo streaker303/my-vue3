@@ -1,6 +1,6 @@
 <template>
   <img alt="Vue logo" src="./assets/logo.png">
-  <h2>Master分支</h2>
+  <h2>DEV分支</h2>
 </template>
 
 <script>
