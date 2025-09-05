@@ -1,7 +1,7 @@
 version: "3.9"                                     # 使用 Compose 3.9 语法版本，通用且新
 services:                                          # 定义要运行的服务集合
   jenkins:                                         # Jenkins 服务：负责前端构建
-    image: jenkins/jenkins:lts-jdk17                      # 运行的镜像名称（本地 build 出来后就是这个标签）                          # 指向 jenkins 子目录（包含 Dockerfile）
+    image: jenkins/jenkins:lts-jdk17
     container_name: wj-jenkins                     # 固定容器名，方便 docker logs / ps 查询
     restart: unless-stopped                        # 除非手动停止，否则异常退出会自动拉起
     ports:
@@ -10,13 +10,13 @@ services:                                          # 定义要运行的服务集
     environment:
       TZ: Asia/Shanghai                            # 时区，影响日志时间显示
     volumes:
-      - /app/jenkins_home:/var/jenkins_home        # 绝对路径：持久化 Jenkins 主目录；删除该目录相当于重装
+      - /app/jenkins_home:/var/jenkins_home        # 绝对路径：持久化 Jenkins 主目录；删除该目录相当于重装，第一次执行脚本，jenkins_home 空目录会自动初始化
       - /app/shared-dist:/var/jenkins_home/deploy/frontend_dist             # 构建产物共享目录；Jenkins 将 dist/* 复制到这里
     networks:
       - ci_net                                       # 加入自定义网络，使与 Nginx 容器互通（未来扩展方便）
 
   nginx:                                           # Nginx 服务：仅提供静态文件访问
-    image: nginx:1.28.0                         # 使用自定义极简镜像名（便于后续扩展）                         # 指向 nginx 子目录（Dockerfile）
+    image: nginx:1.28.0
     container_name: wj-nginx                       # 固定容器名
     restart: unless-stopped                        # 异常自动重启，保证前端站点存活
     depends_on:
